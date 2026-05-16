@@ -1,0 +1,20 @@
+{
+  "manifest_version": 3,
+  "name": "CAUGHTCHA",
+  "description": "Blocks distracting sites until workforce readiness has been verified.",
+  "version": "1.0.0",
+  "action": {
+    "default_title": "CAUGHTCHA"
+  },
+  "background": {
+    "service_worker": "root-background.js"
+  },
+  "permissions": ["storage", "tabs", "webNavigation"],
+  "host_permissions": ["<all_urls>"],
+  "web_accessible_resources": [
+    {
+      "resources": ["dist/index.html", "dist/assets/*"],
+      "matches": ["<all_urls>"]
+    }
+  ]
+}
