@@ -5,7 +5,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
-    "build": "tsc && vite build",
+    "build": "node scripts/restore-build-input.mjs && tsc && vite build && node scripts/sync-extension-root.mjs",
+    "prepare:store": "npm run build && npm run check:store",
     "check:store": "node scripts/check-extension-package.mjs",
     "preview": "vite preview --host 0.0.0.0"
   },
