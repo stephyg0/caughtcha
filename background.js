@@ -5,7 +5,7 @@ const DEFAULT_BLOCKED_HOSTS = [
   "twitter.com",
   "reddit.com",
   "netflix.com",
-  "youtube.com/shorts"
+  "youtube.com"
 ];
 
 const storageGet = (keys) =>
@@ -57,7 +57,7 @@ chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
 
   if (!(await shouldAllowTab(details.tabId)) && matchesBlockedUrl(details.url, blockedHosts)) {
     const redirectUrl = chrome.runtime.getURL(
-      `dist/index.html?blocked=${encodeURIComponent(details.url)}&tabId=${details.tabId}&ts=${Date.now()}`
+      `index.html?blocked=${encodeURIComponent(details.url)}&tabId=${details.tabId}&ts=${Date.now()}`
     );
     chrome.tabs.update(details.tabId, { url: redirectUrl });
   }
