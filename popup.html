@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CAUGHTCHA Controls</title>
+    <link rel="stylesheet" href="./popup.css" />
+  </head>
+  <body>
+    <main>
+      <header>
+        <img src="./icons/icon-48.png" alt="" />
+        <div>
+          <h1>CAUGHTCHA</h1>
+          <p id="statusText">Checking status...</p>
+        </div>
+      </header>
+
+      <button id="toggleButton" type="button" aria-pressed="true">
+        <span id="switchTrack">
+          <span id="switchThumb"></span>
+        </span>
+        <span id="toggleLabel">Captcha is on</span>
+      </button>
+
+      <section>
+        <h2>Blocked sites</h2>
+        <ul id="blockedList"></ul>
+      </section>
+    </main>
+    <script src="./popup.js"></script>
+  </body>
+</html>

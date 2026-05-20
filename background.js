@@ -45,6 +45,11 @@ async function getBlocklist() {
   return customBlockedHosts?.length ? customBlockedHosts : DEFAULT_BLOCKED_HOSTS;
 }
 
+async function isCaughtchaEnabled() {
+  const { caughtchaEnabled = true } = await storageGet({ caughtchaEnabled: true });
+  return caughtchaEnabled !== false;
+}
+
 async function allowTab(tabId, score) {
   const { allowedTabs = {} } = await storageGet("allowedTabs");
   const nextAllowedTabs = { ...allowedTabs, [String(tabId)]: Date.now() + 60_000 };
@@ -53,6 +58,8 @@ async function allowTab(tabId, score) {
 
 chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
   if (details.frameId !== 0 || details.tabId < 0) return;
+  if (!(await isCaughtchaEnabled())) return;
+
   const blockedHosts = await getBlocklist();
 
   if (!(await shouldAllowTab(details.tabId)) && matchesBlockedUrl(details.url, blockedHosts)) {
@@ -64,6 +71,20 @@ chrome.webNavigation.onBeforeNavigate.addListener(async (details) => {
 });
 
 chrome.runtime.onMessage.addListener((message, sender, sendResponse) => {
+  if (message.type === "CAUGHTCHA_GET_STATUS") {
+    Promise.all([isCaughtchaEnabled(), getBlocklist()]).then(([enabled, blockedHosts]) => {
+      sendResponse({ ok: true, enabled, blockedHosts });
+    });
+    return true;
+  }
+
+  if (message.type === "CAUGHTCHA_SET_ENABLED") {
+    storageSet({ caughtchaEnabled: message.enabled !== false }).then(() => {
+      sendResponse({ ok: true, enabled: message.enabled !== false });
+    });
+    return true;
+  }
+
   if (message.type === "PRODUCTIVITY_CAPTCHA_UNLOCK") {
     const tabId = message.tabId ?? sender.tab?.id;
     if (typeof tabId !== "number") {
@@ -101,5 +122,6 @@ chrome.runtime.onInstalled.addListener(async () => {
   if (!existing.customBlockedHosts) {
     await storageSet({ customBlockedHosts: DEFAULT_BLOCKED_HOSTS });
   }
-  await storageSet({ unlockUntil: 0, allowedTabs: {} });
+  const { caughtchaEnabled } = await storageGet("caughtchaEnabled");
+  await storageSet({ unlockUntil: 0, allowedTabs: {}, caughtchaEnabled: caughtchaEnabled !== false });
 });
