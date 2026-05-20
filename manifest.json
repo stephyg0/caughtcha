@@ -24,11 +24,27 @@
     "type": "module"
   },
   "permissions": ["storage", "webNavigation"],
-  "host_permissions": ["<all_urls>"],
+  "host_permissions": [
+    "*://*.tiktok.com/*",
+    "*://*.instagram.com/*",
+    "*://*.x.com/*",
+    "*://*.twitter.com/*",
+    "*://*.reddit.com/*",
+    "*://*.netflix.com/*",
+    "*://*.youtube.com/*"
+  ],
   "web_accessible_resources": [
     {
       "resources": ["index.html", "assets/*"],
-      "matches": ["<all_urls>"]
+      "matches": [
+        "*://*.tiktok.com/*",
+        "*://*.instagram.com/*",
+        "*://*.x.com/*",
+        "*://*.twitter.com/*",
+        "*://*.reddit.com/*",
+        "*://*.netflix.com/*",
+        "*://*.youtube.com/*"
+      ]
     }
   ]
 }
